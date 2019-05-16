@@ -8210,6 +8210,8 @@ function parse_wb_xml(data, opts) {
 			case '<AlternateContent': pass=true; break;
 			case '</AlternateContent>': pass=false; break;
 
+			case '<revisionPtr': break;
+
 			default: if(!pass && opts.WTF) throw 'unrecognized ' + y[0] + ' in workbook';
 		}
 	});
@@ -11232,7 +11234,9 @@ function parse_zip(zip, opts) {
 	/* Numbers iOS hack */
 	var nmode = (getzipdata(zip,"xl/worksheets/sheet.xml",true))?1:0;
 	for(i = 0; i != props.Worksheets; ++i) {
-		if(wbrels) path = 'xl/' + (wbrels[i][1]).replace(/[\/]?xl\//, "");
+		var wbrel = wbrels.find(function(wbrel) {return wbrel[0] === props.SheetNames[i]});
+		if(wbrel) path = 'xl/' + (wbrel[1]).replace(/[\/]?xl\//, "");
+		if(wbrels && !wbrel) path = 'xl/' + (wbrels[i][1]).replace(/[\/]?xl\//, "");
 		else {
 			path = 'xl/worksheets/sheet'+(i+1-nmode)+"." + wbext;
 			path = path.replace(/sheet0\./,"sheet.");

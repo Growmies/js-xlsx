@@ -104,6 +104,8 @@ function parse_wb_xml(data, opts) {
 			case '<AlternateContent': pass=true; break;
 			case '</AlternateContent>': pass=false; break;
 
+			case '<revisionPtr': break;
+
 			default: if(!pass && opts.WTF) throw 'unrecognized ' + y[0] + ' in workbook';
 		}
 	});
